@@ -19,6 +19,13 @@
                 </div>
 
                 <div>
+                    <label class="block font-medium text-sm text-black dark:text-white">
+                        Priority
+                    </label>
+                    <input name="priority" required value="{{ old('priority', $task->priority ?? 1) }}" type="number" class="w-full px-4 py-3 rounded-lg border border-blue-300 focus:border-blue-500 focus:outline-none transition-all mt-1"/>
+                </div>
+
+                <div>
                     <label>Project</label>
                     <select name="project_id" required class="w-full px-4 py-3 rounded-lg border border-blue-300 focus:border-blue-500 focus:outline-none transition-all mt-1">
                         <option value="">Select a project</option>

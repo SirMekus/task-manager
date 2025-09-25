@@ -23,16 +23,8 @@ class CreateTaskRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string'],
+            'priority' => ['required', 'integer', 'min:1'],
             'project_id' => ['nullable', 'exists:projects,id'],
         ];
     }
-    
-    // public function validated($key = null, $default = null)
-    // {
-    //     $validatedData = parent::validated();
-
-    //     unset($validatedData['password']);
-
-    //     return $validatedData;
-    // }
 }

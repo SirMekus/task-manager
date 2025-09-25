@@ -5,9 +5,9 @@
                 <h2>Create Task</h2>
             </div>
 
-            <form action="{{ $task ? route('tasks.update', ['task' => $task]) : route('tasks.store') }}" method="POST" class="space-y-4">
+            <form action="{{ isset($task) ? route('tasks.update', ['task' => $task]) : route('tasks.store') }}" method="POST" class="space-y-4">
                 @csrf
-                @if($task)
+                @if(isset($task))
                     @method('PUT')
                 @endif
                 <div>
@@ -16,6 +16,16 @@
                     </label>
                     <input name="name" required value="{{ old('name', $task->name ?? '') }}" type="text"
                         class="w-full px-4 py-3 rounded-lg border border-blue-300 focus:border-blue-500 focus:outline-none transition-all mt-1">
+                </div>
+
+                <div>
+                    <label>Project</label>
+                    <select name="project_id" required class="w-full px-4 py-3 rounded-lg border border-blue-300 focus:border-blue-500 focus:outline-none transition-all mt-1">
+                        <option value="">Select a project</option>
+                        @foreach($projects as $project)
+                            <option value="{{ $project->id }}" {{ isset($task) && $task->project_id == $project->id ? 'selected' : '' }}>{{ $project->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <div>

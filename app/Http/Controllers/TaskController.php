@@ -3,17 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\Project;
 use Illuminate\Http\Request;
+use App\Http\Requests\CreateTaskRequest;
 
 class TaskController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // return Task::orderBy('priority', 'asc')->get();
-        return view('page.task.index', ['tasks' => Task::orderBy('priority', 'asc')->get()]);
+        return view(
+            'page.task.index',
+            [
+                'tasks' => Task::when($request->project_id, function ($query, $projectId) {
+                    $query->where('project_id', $projectId);
+                })
+                ->orderBy('priority', 'asc')->get(),
+                'projects' => Project::get(),
+            ]
+        );
     }
 
     /**
@@ -21,17 +31,15 @@ class TaskController extends Controller
      */
     public function create()
     {
-        return view('page.task.create');
+        return view('page.task.create', ['projects' => Project::get(),]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateTaskRequest $request)
     {
-        $formData = $request->validate([
-            'name' => ['required', 'string'],
-        ]);
+        $formData = $request->validated();
         $task = Task::create($formData);
         return redirect()->route('tasks.show', $task);
     }
@@ -49,17 +57,15 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        return view('page.task.create', ['task' => $task]);
+        return view('page.task.create', ['task' => $task, 'projects' => Project::get()]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Task $task)
+    public function update(CreateTaskRequest $request, Task $task)
     {
-        $formData = $request->validate([
-            'name' => ['required', 'string'],
-        ]);
+        $formData = $request->validated();
         $task->update($formData);
         return redirect()->route('tasks.show', $task);
     }
